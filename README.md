@@ -8,6 +8,8 @@
 
 Sugar: make the ugly syntaxes go away!
 
+[![Build Status](https://travis-ci.org/olalonde/worm.png)](https://travis-ci.org/olalonde/worm) [![NPM version](https://badge.fury.io/js/worm.png)](http://badge.fury.io/js/worm)
+
 # References
 
 http://martinfowler.com/eaaCatalog/
