@@ -2,12 +2,7 @@
 # THIS IS A WORK IN PROGRESS
 # THIS IS A WORK IN PROGRESS
 
-Adapters have this signature:
-
-exec(Schema, query)
-
-Schema is a regular worm Schema and Query is a json object containing
-all the meta data of the query.
+## See [test/level1flat/](test/level1flat/) to get a glimpse
 
 # TODO
 
