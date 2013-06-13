@@ -5,6 +5,8 @@ var Instance = function (model, obj) {
   this.persisted = false; // was it loaded through a database call?
   this.obj = obj || {};
   this.destroyed = false; 
+  this.errors = [];
+
   // @TODO: copy object so we can compare later to find dirty attributes
   this.model = model;
 };
@@ -88,6 +90,69 @@ Instance.prototype.isDirty = function () {
 
 Instance.prototype.isDestroyed = function () {
   return this.destroyed;
+};
+
+//@TODO: rewrite to support async validators
+//@TODO: validate childs/parents recursively ??
+//@TODO: way to check validate quickly. return as soon as there is an
+//error. drawback is that all errors will not be available in
+//this.errors
+/**
+ * Errors are made available through the errors property
+ *
+ * @return Boolean true if validates, false otherwise
+ */
+Instance.prototype.validates = function () {
+  var attributes, 
+    validator_name, 
+    validator, 
+    context, 
+    validates,
+    value,
+    errors = [],
+    _this = this;
+
+  // @TODO: errors should be indexed by attribute name?
+  this.errors = []; //reset errors property
+
+  for (validator_name in this.model.validates) {
+    attributes = this.model.validates[validator_name];
+    validator = this.model.validators[validator_name];
+
+    // for { args: [/.../i], attributes: [] } syntax
+    if (!Array.isArray(attributes)) {
+      validator = validator.apply(null, attributes.args);
+      attributes = attributes.attributes;
+    }
+
+    if (!validator) {
+      throw new Error('Could not find validaor "' + validator_name + '"');
+    }
+    if (!Array.isArray(attributes)) {
+      throw new Error('You need to specify an attributes array for validator ' + validator_name);
+    }
+
+    attributes.forEach(function (attr) {
+      value = _this.obj[attr];
+      context = { 
+        error: {
+          attribute: attr, 
+          value: value 
+        }, 
+        obj: _this.obj
+      };
+      validates = true; // validate by default
+
+      validates = validator.apply(context, [value, attr]);
+
+      if (!validates) {
+        errors.push(context.error);
+      } 
+    });
+  }
+  this.errors = (errors.length) ? errors : [];
+
+  return !(errors.length);
 };
 
 module.exports = function (model, obj) {

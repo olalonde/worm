@@ -4,6 +4,8 @@ var Model = function (schema) {
   this.name = schema.name;
   this.attributes = schema.attributes;
   this.adapters = schema.adapters;
+  this.validates = schema.validates;
+  this.validators = schema.validators;
 };
 
 Model.prototype.id = function () {
