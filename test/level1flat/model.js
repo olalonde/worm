@@ -44,6 +44,12 @@ describe('setting up a model', function () {
       $oli = $.wrap('User', oli);
     }).should.not.throw();
   });
+  //@TODO
+  //it('wrapping an object (Model(obj)) should not throw an error', function () {
+    //(function () {
+      //$oli = User(oli);
+    //}).should.not.throw();
+  //});
   it('wrapping a wrapped object should do nothing', function () {
       var wrapped = $.wrap('User', $oli);
       wrapped.should.equal($oli);

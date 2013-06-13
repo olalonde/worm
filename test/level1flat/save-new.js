@@ -1,12 +1,12 @@
-var $ = require('../'),
+var $ = require('../../'),
   should = require('should');
 
-$.adapters.memory.init();
+$.adapter($.adapters.memory());
 
 var User = $.model({
   name: 'User',
   attributes: [ 'id', 'name_first', 'name_last', 'email', 'location' ],
-  adapters: [ $.adapters.pgsql ]
+  adapters: [ $.adapters.memory ]
 });
 
 // or
@@ -19,11 +19,13 @@ var oli = {
   notPersistent: 'dont save me im not in attribute list'
 };
 
+$oli = $.wrap(User, oli);
+
 describe('saving a new user', function () {
   var err, user;
 
   before(function (done) {
-    $.save(User(oli)).end(function (_err, _user) {
+    $.save($oli).end(function (_err, _user) {
       err = _err;
       user = _user;
       done();
@@ -36,7 +38,7 @@ describe('saving a new user', function () {
 
   it('user should be an object', function () {
     should.exist(user);
-    user.should.be.an('object');
+    user.should.be.a('object');
   });
 
   it('should set the properties on user', function () {
