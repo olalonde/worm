@@ -11,12 +11,28 @@ Model.prototype.id = function () {
   return this.schema.id || [ 'id' ];
 };
 
-Model.prototype.extractId = function (obj) {
-  var res = {};
+Model.prototype.extractId = function (obj, toArray) {
+  var res = {}, arr = [], id = this.id(), missing_attr = false;
+
+  if (!id.length) return;
+
   this.id().forEach(function (attr) {
+    if (!obj[attr]) return;
+
+    arr.push(obj[attr]);
     res[attr] = obj[attr];
   });
-  return res;
+
+  if (toArray) {
+    // one or some attributes missing from ID
+    if (id.length > arr.length) return; 
+    return arr;
+  }
+  else {
+    // one or some attributes missing from ID
+    if (id.length > Object.keys(res).length) return;
+    return res;
+  }
 };
 
 module.exports = function (schema) {

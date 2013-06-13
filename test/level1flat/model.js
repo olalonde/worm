@@ -16,17 +16,21 @@ describe('initializing a memory adapter', function () {
       adapter = $.adapter($.adapters.memory({ namespace: 'test' }));
     }).should.not.throw();
   });
-  it('should be accessible from $.adapters', function () {
-    should.exist($.adapters);
+  it('should be accessible from $._adapters', function () {
+    should.exist($._adapters);
     $.adapters.should.be.a('object');
-    should.exist($.adapters.memory);
-    $.adapters.memory.should.equal(adapter);
+    should.exist($._adapters.memory);
+    $._adapters.memory.should.equal(adapter);
   });
 });
 
 describe('setting up a model', function () {
   it('should not throw an error', function () {
     (function () {
+      // @TODO: it should be possible to set a "map" for each adapter, to
+      // help them translate our attributes to their data store.
+      // adapters should be able to work without a map by making
+      // assumptions
       User = $.model({
         name: 'User',
         attributes: [ 'id', 'name_first', 'name_last', 'email', 'location' ],
@@ -44,6 +48,13 @@ describe('setting up a model', function () {
       $oli = $.wrap('User', oli);
     }).should.not.throw();
   });
+  it('the wrapped object should be marked as dirty', function () {
+    should.ok($oli.isDirty());
+  });
+  it('the wrapped object should be marked as new', function () {
+    should.ok($oli.isNew());
+  });
+
   //@TODO
   //it('wrapping an object (Model(obj)) should not throw an error', function () {
     //(function () {

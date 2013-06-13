@@ -1,13 +1,13 @@
 var $ = require('../../'),
   should = require('should');
 
-$.adapter($.adapters.memory());
+var memory = $.adapter($.adapters.memory());
 
 var User = $.model({
   name: 'User',
   attributes: [ 'id', 'name_first', 'name_last', 'email', 'location' ],
   id: [ 'id' ],
-  adapters: [ $.adapters.memory ]
+  adapters: [ memory ]
 });
 
 var oli = {
@@ -26,7 +26,8 @@ describe('$.get', function () {
     $.save($oli).end(function (_err, _user) {
       err = _err;
       saved_user = _user;
-
+      //@TODO: clear cache.. we dont want to test cache right now
+      // worm.cache.clear();
       $.get(User).id(1).end(function (_err, _user) {
         err = err || _err;
         loaded_user = _user;
@@ -47,13 +48,21 @@ describe('$.get', function () {
     loaded_user.should.have.property('name_first');
     loaded_user.should.have.property('name_last');
     loaded_user.should.have.property('email');
-    loaded_user.should.not.have.property('notPersistent');
+    loaded_user.should.have.property('notPersistent');
   });
 
   it('loaded user properties should have correct values', function () {
     loaded_user.name_first.should.equal('Olivier');
     loaded_user.name_last.should.equal('Lalonde');
     loaded_user.email.should.equal('olalonde@gmail.com');
+  });
+
+  it('loaded user should not be marked as dirty', function () {
+    should.ok(loaded_user._$instance.isDirty() === false);
+  });
+
+  it('loaded user should not be marked as new', function () {
+    should.ok(loaded_user._$instance.isNew() === false);
   });
 
 });

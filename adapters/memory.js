@@ -61,15 +61,23 @@ Memory.prototype.getCollection = function (collection_name) {
 };
 
 Memory.prototype.select = function (model, query) {
-  if (!query.id) 
-    throw new Error('This adapter currently only supports query by ID.');
+  var search, collection, expr = query.expr, matches = [];
+  if (expr.id) {
+    search = {};
+    model.id().forEach(function (attr) {
+      search[attr] = expr.id;
+    });
+    matches = this.findPartialMatch(model.name, search);
+  }
+  else {
+    matches = this.getCollection(model.name);
+  }
 
-  var search = {};
-  model.id().forEach(function (attr) {
-    search[attr] = query.expr.id;
-  });
-
-  return this.findPartialMatch(model.name, search);
+  if (expr.limit) {
+    matches = matches.slice(0, expr.limit);
+  }
+  
+  return matches;
 };
 
 // returns obj that match partially obj

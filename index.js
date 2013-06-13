@@ -1,5 +1,6 @@
 var errors = require('./errors'),
   extend = require('./util').extend,
+  cache = require('./cache'),
   model = require('./model'),
   instance = require('./instance'),
   query = require('./query'),
@@ -7,15 +8,28 @@ var errors = require('./errors'),
 
 var worm = {
   adapters: require('./adapters'),
+  _adapters: {}, // adapter instances, indexed by label
   models: {}
 };
 
 /**
+ * Get or register an adapter
+ *
  * adapter()
+ *
+ * @argument String|adaper adapter
+ * @argument String label Optional label that will be used to reference
+ * to the adapter
  */
-worm.adapter = function (adapter, name) {
-  name = adapter.name || name;
-  worm.adapters[name] = adapter;
+worm.adapter = function (adapter, label) {
+  if (typeof adapter === 'string') {
+    if(!worm._adapters[adapter])
+      throw new Error('Adapter ' + adapter + ' does not exits.');
+    return worm._adapters[adapter];
+  }
+
+  label = adapter.name || label;
+  worm._adapters[label] = adapter;
   return adapter;
 };
 
@@ -33,16 +47,45 @@ worm.model = function (schema) {
  *
  * @TODO non memory cache?
  */
-worm.cache = function (kinda_obj) {
-  var obj = kinda_obj, $instance;
-  if (kinda_obj instanceof instance.Instance) {
-    $instance = kinda_obj;
-    obj = kinda_obj.obj;
+worm.cache = {
+  get: function (m, obj) {
+    var uid, id;
+    // get(obj)
+    if (!obj) {
+      obj = m;
+      return obj._$instance;
+    }
+    // get(Model, obj)
+    if (obj._$instance) {
+      return obj._$instance;
+    }
+    // @TODO: search in cache with UID 
+    id = m.extractId(obj, true); 
+    if (!id) return false;
+    // @TODO: refactor into an instance/model method
+    // uid = ModelName#id
+    uid = m.name + '#' + id.join('-');
+    res = cache.get(uid);
+    if (res) {
+      debug('Found ' + uid + ' in cache');
+    }
+    return res;
+  },
+  put: function ($instance) {
+    $instance.obj._$instance = $instance;
+    var id = $instance.model.extractId($instance.obj, true);
+    if (!id) {
+      return $instance;
+    }
+    // @TODO: refactor into an instance/model method
+    uid = m.name + '#' + id.join('-');
+    cache.put(uid, $instance);
+    debug('Put ' + uid + ' in cache');
+    return $instance;
+  },
+  clear: function () {
+    cache.clear();
   }
-  if (obj._$instance) return obj._$instance;
-  // @todo: make non enumerable?
-  obj._$instance = $instance;
-  return $instance;
 };
 
 /**
@@ -60,30 +103,52 @@ worm.getModel = function (kinda_model) {
 
 /**
  * wrap()
+ *
+ * wrap(Model, obj)
+ * wrap(Model, instance)
+ * wrap(instance)
+ * wrap(obj)
  */
 worm.wrap = function (kinda_model, obj) {
   // @todo: chech cache
   var m, $instance;
 
+  // wrap(instance)
   if (kinda_model instanceof instance.Instance) 
     return kinda_model;
 
+  // wrap(something, instance)
   if (obj instanceof instance.Instance) 
     return obj;
 
+  // wrap(something, Model)
   if (obj instanceof model.Model) 
     throw new errors.AbstractError('Second argument cannot be a model.');
 
-  // 1 argument
+  // wrap(obj)
   if (!obj) {
-    $instance = worm.cache(kinda_model);
+    obj = kinda_model;
+    $instance = worm.cache.get(obj);
+    if (!$instance) {
+      throw new Error('This object was never wrapped previously. Please use $.wrap(Model, obj) first.');
+    }
   }
+  // wrap(Model, obj)
   else {
     m = worm.getModel(kinda_model);
-    $instance = worm.cache(instance(m, obj));
+    // retrieve from cache
+    $instance = worm.cache.get(m, obj);
+    if (!$instance) {
+      debug('Cache miss');
+      // could not retrieve from cache
+      $instance = instance(m, obj);
+      // save to cache
+      worm.cache.put($instance);
+    }
   }
 
-  if (!$instance) throw new Error('Could not wrap object');
+  if (!$instance) 
+    throw new Error('Could not wrap ' + kinda_model);
 
   return $instance;
 };
@@ -127,25 +192,45 @@ worm.queryCallback = function (method, something) {
       // check if query is memoized?
       q.type = 'select';
       if (method === 'get') {
+        if (q.expr.id) {
+          // @TODO: check if object is in cache before forwarding query
+        }
         q = q.limit(1);
       }
 
+      debug(q);
+
       $instance.execute(q, function (err, res) {
+        var $instance;
         if (err) return cb(err);
         if (!Array.isArray(res)) {
           throw new Error('Adapter should always return an array for select queries');
         }
 
-        if (method === 'get') {
-          if (res.length === 0) {
-            return res;
+        res.forEach(function (obj, i) {
+          $instance = worm.cache.get(m, obj);
+          // @TODO: update cached ($instance.obj) with result from
+          // query (obj) ?
+          if (!$instance) {
+            $instance = worm.wrap(m, obj);
+            worm.cache.put($instance);
           }
-          debug(res);
-          res = worm.wrap(m, res[0]);
-          res.dirtyAttributes = [];
-          res.persisted = true;
-          res = worm.unwrap(res);
+          $instance.dirtyattributes = [];
+          $instance.persisted = true;
+          res[i] = $instance.obj;
+        });
+
+        // get: only return one object not array
+        if (method === 'get') {
+          if (res.length > 0) {
+            res = res[0];
+          }
         }
+
+        // @TODO: memoize query + results? what to do if some other
+        // code inserts a new row... memoization will fail. maybe mark
+        // "model collections" as dirty as well when save() is 
+        // executed???? wth! :)
         cb(err, res);
       });
     },
@@ -161,6 +246,10 @@ worm.queryCallback = function (method, something) {
       else if ($instance.isDirty()) {
         q.type = 'update';
       }
+      else {
+        debug('Called save but obj is not new or dirty');
+        return cb(null, $instance.obj);
+      }
 
       //@TODO: save all childs? parents?
 
@@ -173,6 +262,8 @@ worm.queryCallback = function (method, something) {
         extend($instance.obj, obj);
         $instance.dirtyAttributes = [];
         $instance.persisted = true;
+        // save to cache
+        worm.cache.put($instance);
 
         return cb(err, $instance.obj); 
       });
@@ -210,7 +301,7 @@ worm.queryCallback = function (method, something) {
       something = worm.wrap(something);
     }
 
-    debug('calling ' + method);
+    debug('calling worm.' + method + '()');
 
     return query(worm.queryCallback(method, something)); 
   };

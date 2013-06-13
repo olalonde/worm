@@ -4,6 +4,7 @@ var Instance = function (model, obj) {
   this.dirtyAttributes = model.attributes;
   this.persisted = false; // was it loaded through a database call?
   this.obj = obj || {};
+  // @TODO: copy object so we can compare later to find dirty attributes
   this.model = model;
 };
 

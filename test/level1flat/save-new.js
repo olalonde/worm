@@ -1,12 +1,12 @@
 var $ = require('../../'),
   should = require('should');
 
-$.adapter($.adapters.memory());
+$.adapter($.adapters.memory(), 'memory');
 
 var User = $.model({
   name: 'User',
   attributes: [ 'id', 'name_first', 'name_last', 'email', 'location' ],
-  adapters: [ $.adapters.memory ]
+  adapters: [ $.adapter('memory') ]
 });
 
 // or
