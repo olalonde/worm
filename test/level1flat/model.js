@@ -69,5 +69,12 @@ describe('setting up a model', function () {
     }).should.not.throw(); 
     $wrapped.should.equal($oli);
   });
+  it('wrapping again without model argument should return the same wrapped object', function () {
+    var $wrapped;
+    (function () {
+      $wrapped = $.wrap(oli);
+    }).should.not.throw(); 
+    $wrapped.should.equal($oli);
+  });
 });
 

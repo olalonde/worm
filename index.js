@@ -2,7 +2,8 @@ var errors = require('./errors'),
   extend = require('./util').extend,
   model = require('./model'),
   instance = require('./instance'),
-  query = require('./query');
+  query = require('./query'),
+  debug = require('./debug')('worm');
 
 var worm = {
   adapters: require('./adapters'),
@@ -34,7 +35,7 @@ worm.model = function (schema) {
  */
 worm.cache = function (kinda_obj) {
   var obj = kinda_obj, $instance;
-  if (kinda_obj instanceof instance.Instance) { 
+  if (kinda_obj instanceof instance.Instance) {
     $instance = kinda_obj;
     obj = kinda_obj.obj;
   }
@@ -73,8 +74,17 @@ worm.wrap = function (kinda_model, obj) {
   if (obj instanceof model.Model) 
     throw new errors.AbstractError('Second argument cannot be a model.');
 
-  m = worm.getModel(kinda_model);
-  $instance = worm.cache(instance(m, obj));
+  // 1 argument
+  if (!obj) {
+    $instance = worm.cache(kinda_model);
+  }
+  else {
+    m = worm.getModel(kinda_model);
+    $instance = worm.cache(instance(m, obj));
+  }
+
+  if (!$instance) throw new Error('Could not wrap object');
+
   return $instance;
 };
 
@@ -111,7 +121,9 @@ worm.queryCallback = function (method, something) {
   callbacks = {
     // for get/getAll:
     // check if query is memoized?
-    get: function (q, cb) {
+    getAll: function (q, cb) {
+      $instance = worm.wrap(m, []);
+
       // check if query is memoized?
       q.type = 'select';
       if (method === 'get') {
@@ -120,8 +132,19 @@ worm.queryCallback = function (method, something) {
 
       $instance.execute(q, function (err, res) {
         if (err) return cb(err);
+        if (!Array.isArray(res)) {
+          throw new Error('Adapter should always return an array for select queries');
+        }
+
         if (method === 'get') {
-          res = res[0];
+          if (res.length === 0) {
+            return res;
+          }
+          debug(res);
+          res = worm.wrap(m, res[0]);
+          res.dirtyAttributes = [];
+          res.persisted = true;
+          res = worm.unwrap(res);
         }
         cb(err, res);
       });
@@ -149,7 +172,7 @@ worm.queryCallback = function (method, something) {
         // @TODO: right now it only works for flat objects
         extend($instance.obj, obj);
         $instance.dirtyAttributes = [];
-        $instance.isPersisted = true;
+        $instance.persisted = true;
 
         return cb(err, $instance.obj); 
       });
@@ -186,6 +209,9 @@ worm.queryCallback = function (method, something) {
       // instance
       something = worm.wrap(something);
     }
+
+    debug('calling ' + method);
+
     return query(worm.queryCallback(method, something)); 
   };
 });

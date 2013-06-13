@@ -2,7 +2,12 @@ var util = require('util'); //@TODO: not browser compatible
 var colors = require('colors');
 
 module.exports = function (namespace) {
-  return function (something) {
-    console.log(namespace.blue + ': ' + util.inspect(something));
+  return function () {
+    var args = Array.prototype.slice.call(arguments, 0);
+    var out = namespace.blue + ': ';
+    args.forEach(function (arg) {
+      out += (typeof arg === 'string') ? arg : JSON.stringify(arg);
+    });
+    console.log(out);
   };
 };

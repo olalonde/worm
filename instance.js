@@ -1,3 +1,5 @@
+var debug = require('./debug')('instance');
+
 var Instance = function (model, obj) {
   this.dirtyAttributes = model.attributes;
   this.persisted = false; // was it loaded through a database call?
@@ -24,6 +26,7 @@ Instance.prototype.execute = function (query, cb) {
     var dirty_attributes = _this.sliceDirtyAttributes();
     adapter.execute(query, _this.model, dirty_attributes, function (err, res) {
       // @TODO: not sure :D
+      debug(res);
       cb(err, res);
     });
   });

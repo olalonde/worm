@@ -8,7 +8,15 @@ var Model = function (schema) {
 
 Model.prototype.id = function () {
   //@TODO
-  return [ 'id' ];
+  return this.schema.id || [ 'id' ];
+};
+
+Model.prototype.extractId = function (obj) {
+  var res = {};
+  this.id().forEach(function (attr) {
+    res[attr] = obj[attr];
+  });
+  return res;
 };
 
 module.exports = function (schema) {

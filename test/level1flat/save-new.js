@@ -19,7 +19,23 @@ var oli = {
   notPersistent: 'dont save me im not in attribute list'
 };
 
-$oli = $.wrap(User, oli);
+var $oli;
+
+describe('wrapping a new user', function () {
+
+  before(function () {
+    $oli = $.wrap(User, oli);
+  });
+
+  it('isDirty should return true', function () {
+    should.ok($oli.isDirty());
+  });
+
+  it('isNew should return true', function () {
+    should.ok($oli.isNew());
+  });
+
+});
 
 describe('saving a new user', function () {
   var err, user;
@@ -50,6 +66,18 @@ describe('saving a new user', function () {
 
   it('the user returned should be a reference to oli', function () {
     user.should.equal(oli);
+  });
+
+  it('$.wrap(obj) === $oli', function () {
+    should.ok($.wrap(user) === $oli);
+  });
+
+  it('isDirty should return false', function () {
+    should.ok(!$.wrap(user).isDirty());
+  });
+
+  it('isNew should return false', function () {
+    should.ok(!$.wrap(user).isNew());
   });
 
 });
