@@ -7,6 +7,7 @@
     "test": "test"
   },
   "scripts": {
+    "pretest": "./script/pretest.sh",
     "test": "mocha test/* --reporter spec"
   },
   "repository": "",
@@ -23,7 +24,11 @@
   "license": "MIT",
   "devDependencies": {
     "mocha": "~1.11.0",
-    "should": "~1.2.2"
+    "should": "~1.2.2",
+    "any-db": "~0.5.1",
+    "mysql": "~2.0.0-alpha8",
+    "pg": "~1.3.0",
+    "sqlite3": "~2.1.9"
   },
   "dependencies": {
     "colors": "~0.6.0-1"

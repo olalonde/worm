@@ -1,13 +1,12 @@
 var $ = require('../../'),
+  common = require('./common'),
   should = require('should');
-
-var memory = $.adapter($.adapters.memory());
 
 var User = $.model({
   name: 'User',
   attributes: [ 'id', 'name_first', 'name_last', 'email', 'location' ],
   id: [ 'id' ],
-  adapters: [ memory ]
+  adapters: [ $.adapter('test') ]
 });
 
 var oli = {
@@ -28,6 +27,10 @@ var $bill = $.wrap(User, bill);
 
 describe('$.getAll', function () {
   var err, saved_oli, saved_bill, users;
+
+  before(function (done) {
+    common.pretest(done);
+  });
 
   before(function (done) {
     $.save($oli).end(function (_err, _user) {

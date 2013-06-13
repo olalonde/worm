@@ -1,13 +1,12 @@
 var $ = require('../../'),
+  common = require('./common'),
   should = require('should');
-
-var memory = $.adapter($.adapters.memory());
 
 var User = $.model({
   name: 'User',
   attributes: [ 'id', 'name_first', 'name_last', 'email', 'password', 'location' ],
   id: [ 'id' ],
-  adapters: [ memory ],
+  adapters: [ $.adapter('test') ],
   validates: {
     presence_of: [ 'email', 'name_first', 'name_last', 'password' ],
     is_email: [ 'email' ],

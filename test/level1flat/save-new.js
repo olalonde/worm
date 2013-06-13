@@ -1,12 +1,11 @@
 var $ = require('../../'),
+  common = require('./common'),
   should = require('should');
-
-$.adapter($.adapters.memory(), 'memory');
 
 var User = $.model({
   name: 'User',
   attributes: [ 'id', 'name_first', 'name_last', 'email', 'location' ],
-  adapters: [ $.adapter('memory') ]
+  adapters: [ $.adapter('test') ]
 });
 
 // or
@@ -22,6 +21,9 @@ var oli = {
 var $oli;
 
 describe('wrapping a new user', function () {
+  before(function (done) {
+    common.pretest(done);
+  });
 
   before(function () {
     $oli = $.wrap(User, oli);

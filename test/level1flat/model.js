@@ -1,4 +1,5 @@
 var $ = require('../../'),
+  common = require('./common'),
   should = require('should');
 
 var adapter, User, $oli;
@@ -11,6 +12,10 @@ var oli = {
 };
 
 describe('initializing a memory adapter', function () {
+  before(function (done) {
+    common.pretest(done);
+  });
+
   it('should not throw an error', function () {
     (function () {
       adapter = $.adapter($.adapters.memory({ namespace: 'test' }));
