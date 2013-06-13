@@ -1,3 +1,7 @@
+# THIS IS A WORK IN PROGRESS
+# THIS IS A WORK IN PROGRESS
+# THIS IS A WORK IN PROGRESS
+
 Adapters have this signature:
 
 exec(Schema, query)
