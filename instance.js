@@ -4,6 +4,7 @@ var Instance = function (model, obj) {
   this.dirtyAttributes = model.attributes;
   this.persisted = false; // was it loaded through a database call?
   this.obj = obj || {};
+  this.destroyed = false; 
   // @TODO: copy object so we can compare later to find dirty attributes
   this.model = model;
 };
@@ -21,11 +22,16 @@ Instance.prototype.execute = function (query, cb) {
 
   // @TODO: async: only call final callback after all adapters are done
   this.model.adapters.forEach(function (adapter) {
+    // @TODO: why have this method... adds some useless indirection and
+    // confusing. why not move that code to worm.js instead.
     // @TODO: model should contain an optional map for every adapter
     // that will help them map attributes to sql rows/redis keys/etc.
     // for now, we are just passing this.model :/
-    var dirty_attributes = _this.sliceDirtyAttributes();
-    adapter.execute(query, _this.model, dirty_attributes, function (err, res) {
+    var values = _this.sliceDirtyAttributes();
+    if (query.type === 'destroy') {
+      values = _this.getId();
+    }
+    adapter.execute(query, _this.model, values, function (err, res) {
       // @TODO: not sure :D
       debug(res);
       cb(err, res);
@@ -64,6 +70,10 @@ Instance.prototype.getId = function () {
   return res;
 }
 
+Instance.prototype.isPersisted = function () {
+  return this.persisted;
+};
+
 Instance.prototype.isGettable = function () {
   return !!this.getId();
 };
@@ -74,6 +84,10 @@ Instance.prototype.isNew = function () {
 
 Instance.prototype.isDirty = function () {
   return (this.dirtyAttributes.length > 0);
+};
+
+Instance.prototype.isDestroyed = function () {
+  return this.destroyed;
 };
 
 module.exports = function (model, obj) {

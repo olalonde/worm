@@ -272,8 +272,13 @@ worm.queryCallback = function (method, something) {
     destroy: function (q, cb) {
       q.type = 'destroy';
       $instance.execute(q, function (err, res) {
-        //@TODO: remove $instance from cache,
+        //@TODO: remove $instance from cache?
         //and remove all object properties that link to $instance?
+        $instance.destroyed = true;
+        $instance.persisted = false;
+        // no need to mark dirtyAttributes since its implied by
+        // $instance.persisted  ? 
+        $instance.dirtyAttributes = $instance.model.attributes; 
         return cb(err, res);
       });
     }

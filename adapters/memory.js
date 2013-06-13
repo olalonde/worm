@@ -24,6 +24,9 @@ Memory.prototype.execute = function (query, model, values, cb) {
     case 'select':
       res = this.select(model, query);
       break;
+    case 'destroy':
+      res = this.destroy(model, values);
+      break;
     default:
       throw new errors.NotImplementedError('This adapter does not support ' + query.type + ' queries');
       break;
@@ -61,13 +64,13 @@ Memory.prototype.getCollection = function (collection_name) {
 };
 
 Memory.prototype.select = function (model, query) {
-  var search, collection, expr = query.expr, matches = [];
+  var search, collection, expr = query.expr, matches = [], results;
   if (expr.id) {
     search = {};
     model.id().forEach(function (attr) {
       search[attr] = expr.id;
     });
-    matches = this.findPartialMatch(model.name, search);
+    matches = this.findPartialMatch(model.name, search).results;
   }
   else {
     matches = this.getCollection(model.name);
@@ -84,7 +87,8 @@ Memory.prototype.select = function (model, query) {
 Memory.prototype.findPartialMatch = function (collection_name, obj) {
   var collection = this.getCollection(collection_name),
     results = [],
-    matches;
+    indexes = [],
+    is_a_match;
 
   if (Object.keys(obj).length === 0) {
     throw new Error('Search object must have at least one key.');
@@ -93,17 +97,18 @@ Memory.prototype.findPartialMatch = function (collection_name, obj) {
   debug('Searching ' + collection_name + ' for ', obj);
 
   for (var i = 0; i < collection.length; i++) {
-    matches = true;
+    is_a_match = true;
     for (var k in obj) {
        if (obj[k] != collection[i][k]) 
-         matches = false;
+         is_a_match = false;
     }
-    if (matches) {
+    if (is_a_match) {
       results.push(collection[i]);
+      indexes.push(i);
     }
   }
 
-  return results;
+  return { results: results, indexes: indexes };
 };
 
 Memory.prototype.insert = function (model, values) {
@@ -119,6 +124,24 @@ Memory.prototype.insert = function (model, values) {
   });
 
   collection.push(values);
+
+  return values;
+};
+
+Memory.prototype.destroy = function (model, values) {
+  var id_attrs = model.id(), search, matches;
+
+  search = model.extractId(values);
+
+  matches = this.findPartialMatch(model.name, search);
+
+  // get index of first match
+  var index = matches.indexes[0];
+  // delete it from collection
+  console.log(this.getCollection(model.name));
+  this.getCollection(model.name).splice(index, 1);
+
+  console.log(this.getCollection(model.name));
 
   return values;
 };
