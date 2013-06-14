@@ -33,8 +33,6 @@ var $oli = $.wrap(User, oli);
 var $milton = $.wrap(User, milton);
 var $bill = $.wrap(User, bill);
 
-var q1 = 
-
 describe('integration testing', function () {
   var err, results;
 
