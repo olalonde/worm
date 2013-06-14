@@ -34,8 +34,8 @@ describe('$.get', function () {
       $.get(User).id(1).end(function (_err, _user) {
         err = err || _err;
         loaded_user = _user;
+        done();
       });
-      done();
     });
   });
 
