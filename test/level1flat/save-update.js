@@ -49,15 +49,16 @@ describe('updating a user', function () {
     before(function (done) {
       $.save($oli).end(function (_err, res) {
         err = _err;                  
+        done();
       });
     });
 
     it('should not return an error', function () {
-      assert.ok(!err);
+      should.ok(!err);
     });
 
     it('isDirty should return false', function () {
-      should.ok($oli.isDirty());
+      should.ok(!$oli.isDirty());
     });
 
     it('user first name should have changed', function () {
@@ -65,6 +66,14 @@ describe('updating a user', function () {
       oli.name_last.should.equal('Friedman');
     });
 
+    it('there should be only one object in User', function (done) {
+      $.count(User).end(function (err, count) {
+        should.not.exist(err);
+        should.exist(count);
+        count.should.equal(1);
+        done();
+      });
+    });
   });
 
 });

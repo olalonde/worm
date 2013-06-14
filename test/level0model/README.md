@@ -4,3 +4,4 @@ with an adapter).
 TODO:
 
 - Test markNoDirty, markDirty, isDirty, etc. etc.
+- Async validations
