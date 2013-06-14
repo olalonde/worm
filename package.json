@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "colors": "~0.6.0-1",
-    "sql": "~0.23.0"
+    "sql": "~0.23.0",
+    "underscore": "~1.4.4"
   }
 }

@@ -39,6 +39,7 @@ describe('wrapping a new user', function () {
 
 });
 
+
 describe('saving a new user', function () {
   var err, user;
 

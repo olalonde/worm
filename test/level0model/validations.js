@@ -1,4 +1,5 @@
 var $ = require('../../'),
+  _ = require('underscore'),
   common = require('./common'),
   should = require('should');
 
@@ -38,16 +39,16 @@ var User = $.model({
     regex: function (regex) {
       return function (value) {
         return regex.test(value);
-      }
+      };
     },
     min: function (length) {
       return function (value) {
         return (value.length >= length);
-      }
+      };
     },
     is_email: function (value) {
       this.error.name = 'Invalid email';
-      return /[^\s]+@[^\s]+/.test(value);
+      return (/[^\s]+@[^\s]+/).test(value);
     }
   }
   // @TODO: hooks:  (hooks can block an action save/get/validate/etc.)
@@ -98,19 +99,15 @@ var $valid_user = $.wrap(User, valid_user);
 // @TODO: this should be async eventually!
 
 describe('testing validations for', function () {
-  for (var k in invalid_users) {
-    (function (k) {
-      var invalid_user = invalid_users[k],
-        $invalid_user = $.wrap(User, invalid_user);
+  _.each(invalid_users, function (invalid_user, k) {
+    var $invalid_user = $.wrap(User, invalid_user);
 
-      it(k + ': should not validate', function () {
-        should.ok($invalid_user.validates() === false);
-        should.ok($invalid_user.errors.length > 0);
-        console.log($invalid_user.errors);
-      });
-
-    })(k);
-  }
+    it(k + ': should not validate', function () {
+      should.ok($invalid_user.validates() === false);
+      should.ok($invalid_user.errors.length > 0);
+      console.log($invalid_user.errors);
+    });
+  });
 
   it ('valid user: should validate', function () {
     should.ok($valid_user.validates());

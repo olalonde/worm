@@ -9,6 +9,7 @@
 - Sugar: make the ugly syntaxes go away!
 - Verbose option to know what's going on
 - Implement sql adapter
+- Get rid of util and use _.js instead
 
 [![Build Status](https://travis-ci.org/olalonde/worm.png)](https://travis-ci.org/olalonde/worm) [![NPM version](https://badge.fury.io/js/worm.png)](http://badge.fury.io/js/worm)
 

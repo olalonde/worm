@@ -1,6 +1,6 @@
 var $ = require('../../'),
   debug = require('../../lib/debug')('test:common'),
-  adapter_name = 'memory', // default adapter
+  adapter_name = 'sql', // default adapter
   opts,
   adapter;
 
