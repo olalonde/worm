@@ -44,6 +44,7 @@ describe('saving a new user', function () {
 
   before(function (done) {
     $.save($oli).end(function (_err, _user) {
+      if (_err) console.error(_err);
       err = _err;
       user = _user;
       done();

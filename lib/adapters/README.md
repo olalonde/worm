@@ -16,6 +16,12 @@ adapter.execute = function (query, model, values, cb) {}
  * flushes the database (erase all data ?and meta data?) 
  */
 adapter.flush = function (cb) {}
+
+/**
+ * raw access to whatever the adapter is using
+ * for sql that is a anydb.conn 
+ */
+adapter.raw 
 ```
 
 TODO: all adapters should inherit from a base adapter?

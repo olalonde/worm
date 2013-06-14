@@ -1,6 +1,6 @@
 var $ = require('../../'),
   debug = require('../../lib/debug')('test:common'),
-  adapter_name = 'memory', 
+  adapter_name = 'memory', // default adapter
   opts,
   adapter;
 
@@ -16,5 +16,11 @@ adapter = $.adapter($.adapters[adapter_name](opts), 'test');
 
 module.exports.pretest = function (cb) {
   debug('Flushing database');
-  adapter.flush(cb);
+
+  if (adapter_name === 'sql') {
+    adapter.raw.query('TRUNCATE TABLE users;', cb);
+  }
+  else {
+    adapter.flush(cb);
+  }
 };
