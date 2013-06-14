@@ -35,6 +35,6 @@
     "sql": "~0.23.0",
     "underscore": "~1.4.4",
     "async": "~0.2.9",
-    "expressionist": "0.0.1"
+    "expressionist": "*"
   }
 }
