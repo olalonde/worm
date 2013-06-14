@@ -82,7 +82,7 @@ describe('$.getAll(User).where()', function () {
     });
   });
 
-  describe.skip('name_first: Steve or ' +
+  describe('name_first: Steve or ' +
            '(name_last: Paul and ' +
            'name_first != Rand and ' +
            'email != rand@paul.com)', function () {
@@ -95,8 +95,8 @@ describe('$.getAll(User).where()', function () {
           return _('name_first')
           .eql('Steve')
           .or(
-            _('name_last').eql('Jobs')
-            .and(_('name_first').notEql('Rand'))
+            _('name_last').notEql('Jobs')
+            .and(_('name_last').eql('Paul'))
             .and(_('email').notEql('rand@paul.com'))
           );
         })
@@ -105,9 +105,26 @@ describe('$.getAll(User).where()', function () {
           users = _users;
           done();
         });
+
+      // @todo: Support this syntax?
+      //$.getAll(User).where(function (name_first, name_last) {
+          //return name_first
+          //.eql('Steve')
+          //.or(
+            //name_last.eql('Jobs')
+            //.and(_('name_first').notEql('Rand'))
+            //.and(_('email').notEql('rand@paul.com'))
+          //);
+        //})
+        //.end(function (_err, _users) {
+          //err = _err;
+          //users = _users;
+          //done();
+        //});
     });
 
     it('should not return an error', function () {
+      if (err) console.error(err);
       should.ok(!err);
     });
 
