@@ -1,4 +1,4 @@
-echo "DELETE FROM users" | psql worm-test
+echo "DELETE FROM users" | psql wormtest
 #dropdb worm-test;
-createdb worm-test;
-psql worm-test < script/database.sql;
+createdb wormtest;
+psql wormtest < script/database.sql;

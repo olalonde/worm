@@ -9,7 +9,10 @@ if (process.env.ADAPTER) {
 }
 
 if (adapter_name === 'sql') {
-  opts = 'postgres://localhost/worm-test';
+  opts = 'postgres://localhost/wormtest';
+  if (process.env.TRAVIS) {
+    opts = 'postgres://postgres:@localhost/wormtest';
+  }
 }
 
 adapter = $.adapter($.adapters[adapter_name](opts), 'test');

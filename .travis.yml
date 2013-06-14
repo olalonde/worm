@@ -5,4 +5,4 @@ node_js:
   - "0.8"
   - "0.6"
 before_script:
-  - psql -c 'create database worm-test;' -U postgres
+  - psql -c 'create database wormtest;' -U postgres
