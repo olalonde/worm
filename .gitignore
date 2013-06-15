@@ -11,6 +11,7 @@ lib-cov
 pids
 logs
 results
+plato
 
 node_modules
 npm-debug.log

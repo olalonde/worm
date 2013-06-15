@@ -2,7 +2,7 @@
 # THIS IS A WORK IN PROGRESS
 # THIS IS A WORK IN PROGRESS
 
-## See [test/level1flat/](test/level1flat/) to get a glimpse
+## See [test/](test/) to get a glimpse
 
 # TODO
 
@@ -11,6 +11,8 @@
 - Implement sql adapter
 - Get rid of util and use _.js instead
 - Should be able to mass save collections: $.wrap(User, []).save() ?
+- Idea: disregard cache: savee, disregard cache and validations: saveee, etc.  LOL :)
+- Handle created_at updated_at! maybe that should be a presave hook instead of bloating the core?
 
 [![Build Status](https://travis-ci.org/olalonde/worm.png)](https://travis-ci.org/olalonde/worm) [![NPM version](https://badge.fury.io/js/worm.png)](http://badge.fury.io/js/worm)
 

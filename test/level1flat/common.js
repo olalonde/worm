@@ -9,9 +9,9 @@ if (process.env.ADAPTER) {
 }
 
 if (adapter_name === 'sql') {
-  opts = 'postgres://localhost/wormtest';
+  opts = 'postgres://localhost/level1';
   if (process.env.TRAVIS) {
-    opts = 'postgres://postgres:@localhost/wormtest';
+    opts = 'postgres://postgres:@localhost/level1';
   }
 }
 
