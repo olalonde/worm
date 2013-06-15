@@ -2,29 +2,33 @@ var $ = require('../../'),
   common = require('./common'),
   should = require('should');
 
-var User = $.model({
-  name: 'User',
-  attributes: [ 'id', 'name_first' ],
-  id: [ 'id' ],
-  adapters: [ $.adapter('test') ]
-});
-
-var oli = {
-  name_first: 'Olivier',
-};
-
-var milton = {
-  name_first: 'Milton',
-};
-
-var $oli = $.wrap(User, oli);
-var $milton = $.wrap(User, milton);
+var User, oli, milton, $oli, $milton;
 
 describe('count users', function () {
   var err, count;
 
   before(function (done) {
     common.pretest(done);
+  });
+  before(function () {
+
+    User = $.model({
+      name: 'User',
+      attributes: [ 'id', 'name_first' ],
+      id: [ 'id' ],
+      adapters: [ $.adapter('test1') ]
+    });
+
+    oli = {
+      name_first: 'Olivier',
+    };
+
+    milton = {
+      name_first: 'Milton',
+    };
+
+    $oli = $.wrap(User, oli);
+    $milton = $.wrap(User, milton);
   });
 
   // Save 2 users

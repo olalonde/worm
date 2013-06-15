@@ -15,7 +15,7 @@ if (adapter_name === 'sql') {
   }
 }
 
-adapter = $.adapter($.adapters[adapter_name](opts), 'test');
+adapter = $.adapter($.adapters[adapter_name](opts), 'test1');
 
 module.exports.pretest = function (cb) {
   debug('Flushing database');

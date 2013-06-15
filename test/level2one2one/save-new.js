@@ -61,7 +61,7 @@ describe('saving person\'s passport using passport_id attribute', function () {
 
 });
 
-describe.skip('saving a new person with embed passport object', function () {
+describe('saving a new person with embed passport object', function () {
 
   // worm should recursively save relationships which
   // are new/not wrapped and of course save those relationships
@@ -71,10 +71,31 @@ describe.skip('saving a new person with embed passport object', function () {
       code: 123,
       country: 'bob land'
     }
-  };
+  }, $person = $.wrap(Person, person);
 
-  before(function () {
+  before(function (done) {
+    $.save($person).end(done);
   });
 
+  it('person should be saved', function () {
+    should.ok(!$person.isDirty());
+    should.ok(!$person.isNew());
+    should.ok($person.isPersisted());
+  });
+
+  it('person.passport should be saved', function () {
+    var $passport = $.wrap(person.passport);
+    should.ok(!$passport.isDirty());
+    should.ok(!$passport.isNew());
+    should.ok($passport.isPersisted());
+  });
+
+  it('person.passport_id should exist', function () {
+    should.exist(person.passport_id);
+  });
+
+  it('person.passport_id should equal person.passport.id', function () {
+    person.passport_id.should.equal(person.passport.id);
+  });
 
 });

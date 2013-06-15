@@ -5,7 +5,7 @@ var $ = require('../../'),
 var User = $.model({
   name: 'User',
   attributes: [ 'id', 'name_first', 'name_last', 'email', 'location' ],
-  adapters: [ $.adapter('test') ]
+  adapters: [ $.adapter('test1') ]
 });
 
 // or

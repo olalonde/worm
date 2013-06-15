@@ -13,6 +13,7 @@
 - Should be able to mass save collections: $.wrap(User, []).save() ?
 - Idea: disregard cache: savee, disregard cache and validations: saveee, etc.  LOL :)
 - Handle created_at updated_at! maybe that should be a presave hook instead of bloating the core?
+- Bug when defining model with same name more than once
 
 [![Build Status](https://travis-ci.org/olalonde/worm.png)](https://travis-ci.org/olalonde/worm) [![NPM version](https://badge.fury.io/js/worm.png)](http://badge.fury.io/js/worm)
 

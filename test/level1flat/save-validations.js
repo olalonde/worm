@@ -6,7 +6,7 @@ var User = $.model({
   name: 'User',
   attributes: [ 'id', 'name_first', 'name_last', 'email', 'password', 'location' ],
   id: [ 'id' ],
-  adapters: [ $.adapter('test') ],
+  adapters: [ $.adapter('test1') ],
   validates: {
     presence_of: [ 'email', 'name_first', 'name_last', 'password' ],
     is_email: [ 'email' ],
