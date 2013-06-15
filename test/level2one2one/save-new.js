@@ -99,3 +99,102 @@ describe('saving a new person with embed passport object', function () {
   });
 
 });
+
+describe('saving a new person with two hasOne relations', function () {
+
+  // worm should recursively save relationships which
+  // are new/not wrapped and of course save those relationships
+  var bob = {
+    name: 'bob',
+    passport: {
+      code: 123,
+      country: 'bob land'
+    },
+    bestFriend: {
+      name: 'Alice'
+    }
+  }, $bob = $.wrap(Person, bob);
+
+  before(function (done) {
+    $.save($bob).end(done);
+  });
+
+  it('bob should be saved', function () {
+    should.ok(!$bob.isDirty());
+    should.ok(!$bob.isNew());
+    should.ok($bob.isPersisted());
+  });
+
+  it('bob.passport should be saved', function () {
+    var $passport = $.wrap(bob.passport);
+    should.ok(!$passport.isDirty());
+    should.ok(!$passport.isNew());
+    should.ok($passport.isPersisted());
+  });
+
+  it('bob.bestFriend should be saved', function () {
+    var $alice = $.wrap(bob.bestFriend);
+    should.ok(!$alice.isDirty());
+    should.ok(!$alice.isNew());
+    should.ok($alice.isPersisted());
+  });
+
+  it('bob.passport_id should exist', function () {
+    should.exist(bob.passport_id);
+  });
+
+  it('bob.passport_id should equal bob.passport.id', function () {
+    bob.passport_id.should.equal(bob.passport.id);
+  });
+
+  it('bob.bestfriend_id should exist', function () {
+    should.exist(bob.bestfriend_id);
+  });
+
+  it('bob.bestfriend_id should equal bob.bestfriend.id', function () {
+    bob.bestfriend_id.should.equal(bob.bestFriend.id);
+  });
+
+});
+
+describe('saving a new person with self-referential hasOne relation', function () {
+
+  // worm should recursively save relationships which
+  // are new/not wrapped and of course save those relationships
+  var bob = {
+    name: 'bob',
+  }, $bob;
+
+  $bob = $.wrap(Person, bob);
+
+  bob.bestFriend = bob;
+
+  it('should not throw an error', function (done) {
+    (function () {
+      $.save($bob).end(done);
+    }).should.not.throw();
+  });
+
+  it('bob should be saved', function () {
+    should.ok(!$bob.isDirty());
+    should.ok(!$bob.isNew());
+    should.ok($bob.isPersisted());
+  });
+
+  it('bob.bestFriend should equal bob', function () {
+    bob.bestFriend.should.equal(bob);
+  });
+
+  it('bob.bestFriend._$instance should equal bob._$instance', function () {
+    bob.bestFriend._$instance.should.equal(bob._$instance);
+  });
+
+  it('bob.bestfriend_id should exist', function () {
+    should.exist(bob.bestfriend_id);
+  });
+
+  it('bob.bestfriend_id should equal bob.id', function () {
+    bob.bestfriend_id.should.equal(bob.id);
+  });
+
+});
