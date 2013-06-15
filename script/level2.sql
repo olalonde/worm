@@ -1,9 +1,8 @@
 -- postgresql
-DRPP TABLE users;
-DROP TABLE passports;
+DROP TABLE IF EXISTS persons;
+DROP TABLE IF EXISTS passports;
 
-CREATE TABLE users
-(
+CREATE TABLE persons (
    id SERIAL,
    name character varying(255),
    passport_id integer,
@@ -12,8 +11,7 @@ CREATE TABLE users
    -- @TODO: foreign constraint on location
 );
 
-CREATE TABLE passports
-(
+CREATE TABLE passports (
    id SERIAL,
    code character varying(255),
    country character varying(255),

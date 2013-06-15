@@ -21,7 +21,7 @@ var pretest = function (cb) {
   debug('Flushing database');
 
   if (adapter_name === 'sql') {
-    adapter.raw.query('TRUNCATE TABLE users;TRUNCATE TABLE passports;', cb);
+    adapter.raw.query('TRUNCATE TABLE persons;TRUNCATE TABLE passports;', cb);
   }
   else {
     adapter.flush(cb);
@@ -31,8 +31,8 @@ var pretest = function (cb) {
 // @TODO: make it easy to build models with model builder functions? etc.
 // @TODO: make it easy to take Sequelize model and convert it?
 
-var User = $.model({
-  name: 'User',
+var Person = $.model({
+  name: 'Person',
   attributes: [ 'id', 'name', 'passport_id', 'bestfriend_id' ],
   relationships: {
     passport: {
@@ -43,7 +43,7 @@ var User = $.model({
       // self reference... watch out for recursion!
       // also, best friend could be yourself! test edge cases
       type: 'hasOne',
-      model: 'User'
+      model: 'Person'
     }
     // @TODO: how to handle polymorphic relationships?
     // For example: object_id, and object_type
@@ -72,9 +72,9 @@ var Passport = $.model({
   name: 'Passport',
   attributes: [ 'id', 'code', 'country' ],
   relationships: {
-    user: {
+    person: {
       type: 'belongsTo', //make sure its linked both ways!
-      model: 'User'
+      model: 'Person'
     }
   },
   adapters: [ 'test' ]
@@ -109,7 +109,7 @@ var casey = {
 
 module.exports = {
   pretest: pretest,
-  User: User,
+  Person: Person,
   Passport: Passport,
   oli: oli,
   derek: derek,

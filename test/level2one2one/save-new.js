@@ -2,7 +2,7 @@ var async = require('async'),
   $ = require('../../'),
   should = require('should'),
   common = require('./common'),
-  User = common.User,
+  Person = common.Person,
   Passport = common.Passport,
   oli = common.oli,
   derek = common.derek,
@@ -11,7 +11,7 @@ var async = require('async'),
   passportderek = common.passportderek,
   passportcasey = common.passportcasey;
 
-describe('saving user\'s passport using passport_id attribute', function () {
+describe('saving person\'s passport using passport_id attribute', function () {
   before(function (done) {
     common.pretest(done);
   });
@@ -32,22 +32,22 @@ describe('saving user\'s passport using passport_id attribute', function () {
 
   before(function (done) {
     async.series([
-      $.save($.wrap(User, oli)).cb(),
-      $.save($.wrap(User, derek)).cb(),
-      $.save($.wrap(User, casey)).cb(),
+      $.save($.wrap(Person, oli)).cb(),
+      $.save($.wrap(Person, derek)).cb(),
+      $.save($.wrap(Person, casey)).cb(),
     ], function (err, res) {
       if (err) return done(err);
       done();
     });
   });
 
-  it('the passport_id of the user objects should be set', function () {
-    [ oli, derek, casey ].forEach(function (user) {
-      should.exist(user.passport_id);
+  it('the passport_id of the person objects should be set', function () {
+    [ oli, derek, casey ].forEach(function (person) {
+      should.exist(person.passport_id);
     });
   });
 
-  describe('removing passport_id on a user', function () {
+  describe('removing passport_id on a person', function () {
     before(function (done) {
       oli.passport_id = null;
       $.save(oli).end(done);
@@ -61,11 +61,11 @@ describe('saving user\'s passport using passport_id attribute', function () {
 
 });
 
-describe.skip('saving a new user with embed passport object', function () {
+describe.skip('saving a new person with embed passport object', function () {
 
   // worm should recursively save relationships which
   // are new/not wrapped and of course save those relationships
-  var user = {
+  var person = {
     name: 'bob',
     passport: {
       code: 123,
