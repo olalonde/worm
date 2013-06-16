@@ -1,5 +1,5 @@
 var $ = require('../../'),
-  debug = require('../../lib/debug')('test:common'),
+  debug = require('debug')('worm:test'),
   adapter_name = 'sql', // default adapter
   opts,
   adapter;
