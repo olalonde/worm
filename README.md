@@ -19,6 +19,7 @@
 operations anywhere in the code. Would be helpful for self-referential
 relationships... if self referential relationship detected, add update
 to queue that updates the referenced ID?
+- Handle cycles nicely when saving/updating an object graph
 
 [![Build Status](https://travis-ci.org/olalonde/worm.png)](https://travis-ci.org/olalonde/worm) [![NPM version](https://badge.fury.io/js/worm.png)](http://badge.fury.io/js/worm)
 

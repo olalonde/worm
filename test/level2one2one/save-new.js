@@ -198,3 +198,42 @@ describe('saving a new person with self-referential hasOne relation', function (
   });
 
 });
+
+describe.skip('saving a new person with self-referential hasOne relation at 2 level deep', function () {
+
+  // worm should recursively save relationships which
+  // are new/not wrapped and of course save those relationships
+  var bob = {
+    name: 'bob',
+    bestFriend: {
+      name: 'alice'
+    }
+  }, $bob;
+
+  bob.bestFriend.bestFriend = bob;
+
+  $bob = $.wrap(Person, bob);
+
+  it('should not throw an error', function (done) {
+      $.save($bob).end(done);
+  });
+
+  it('bob should be saved', function () {
+    should.ok(!$bob.isDirty());
+    should.ok(!$bob.isNew());
+    should.ok($bob.isPersisted());
+  });
+
+  it('bob.bestfriend_id should exist', function () {
+    should.exist(bob.bestfriend_id);
+  });
+
+  it('bob.bestfriend.bestfriend_id should exist', function () {
+    should.exist(bob.bestfriend.bestfriend_id);
+  });
+
+  it('bob.bestfriend.bestfriend_id should equal bob.id', function () {
+    bob.bestfriend.bestfriend_id.should.equal(bob.id);
+  });
+
+});
