@@ -199,6 +199,10 @@ describe('saving a new person with self-referential hasOne relation', function (
 
 });
 
+// this fails because alice is saved first then bob. but after bob is saved
+// we should update alica to set her bestfriend_id to bob's id
+// this is quite complex as we need to keep track of dependencies and
+// watch out for cycles, etc.
 describe.skip('saving a new person with self-referential hasOne relation at 2 level deep', function () {
 
   // worm should recursively save relationships which
@@ -215,7 +219,7 @@ describe.skip('saving a new person with self-referential hasOne relation at 2 le
   $bob = $.wrap(Person, bob);
 
   it('should not throw an error', function (done) {
-      $.save($bob).end(done);
+    $.save($bob).end(done);
   });
 
   it('bob should be saved', function () {
