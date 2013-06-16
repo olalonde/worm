@@ -20,11 +20,15 @@ adapter = $.adapter($.adapters[adapter_name](opts), 'test');
 var pretest = function (cb) {
   debug('Flushing database');
 
-  if (adapter_name === 'sql') {
-    adapter.raw.query('TRUNCATE TABLE persons;TRUNCATE TABLE passports;', cb);
-  }
-  else {
-    adapter.flush(cb);
+  $.cache.clear(next);
+
+  function next() {
+    if (adapter_name === 'sql') {
+      adapter.raw.query('TRUNCATE TABLE persons;TRUNCATE TABLE passports;', cb);
+    }
+    else {
+      adapter.flush(cb);
+    }
   }
 };
 

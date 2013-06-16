@@ -20,10 +20,14 @@ adapter = $.adapter($.adapters[adapter_name](opts), 'test1');
 module.exports.pretest = function (cb) {
   debug('Flushing database');
 
-  if (adapter_name === 'sql') {
-    adapter.raw.query('TRUNCATE TABLE users;', cb);
-  }
-  else {
-    adapter.flush(cb);
+  $.cache.clear(next);
+
+  function next() {
+    if (adapter_name === 'sql') {
+      adapter.raw.query('TRUNCATE TABLE users;', cb);
+    }
+    else {
+      adapter.flush(cb);
+    }
   }
 };
