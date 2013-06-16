@@ -10,7 +10,7 @@ describe('lazy loading a 1-to-1 relationship', function () {
     common.pretest(done);
   });
 
-  var oli;
+  var oli, passport;
 
   before(function (done) {
     $.save($.wrap(Person, {
@@ -36,8 +36,21 @@ describe('lazy loading a 1-to-1 relationship', function () {
     });
   });
 
-  it('should be able to fetch the user', function () {
-    oli.name.should.equal('oli');
+  it('should not return an error', function (done) {
+    $oli = $.wrap(oli);
+    $.load($oli, 'passport').end(function (err, _passport) {
+      should.ok(!err);
+      passport = _passport;
+      done();
+    });
+  });
+
+  it('person.passport should exist', function () {
+    should.exist(oli.passport);
+  });
+
+  it('person.passport_id should equal person.passport_id', function () {
+    oli.passport_id.should.equal(oli.passport.id);
   });
 });
 
