@@ -32,14 +32,17 @@ describe('wrapping object with one-to-many relationship', function () {
 
   it('post.comments should be wrapped', function () {
     should.exist(post.comments._$instance);
+    post.comments._$instance.model.name.should.equal('Comment');
   });
 
   it('post.comments[0] should be wrapped', function () {
     should.exist(post.comments[0]._$instance);
+    post.comments[0]._$instance.model.name.should.equal('Comment');
   });
 
   it('post.comments[1] should be wrapped', function () {
     should.exist(post.comments[1]._$instance);
+    post.comments[1]._$instance.model.name.should.equal('Comment');
   });
 
 });
