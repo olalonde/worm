@@ -8,3 +8,15 @@ test for that as it does not appear to be the case at the moment.
   that could be helpful when we implement reload
 
 - write localStorage/IndexedDB and REST adapters
+
+- make it easy to do auto completion on properties? uhhhh?
+
+```javascript
+$.autocomplete(Model, attribute, 'some string to be autocompleted', function (res) {
+  
+});
+```
+
+should probably not be part of core...
+
+

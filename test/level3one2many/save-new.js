@@ -74,7 +74,7 @@ describe('insert object with one-to-many relationship', function () {
     });
   });
   
-  describe.skip('after a fresh database load', function () {
+  describe('after a fresh database load', function () {
     var post, err;
 
     before(function (done) {
@@ -82,7 +82,7 @@ describe('insert object with one-to-many relationship', function () {
     });
 
     before(function (done) {
-      $.get(Post).where({ title: 'Some post...' }).end(function (_err, _post) {
+      $.get(Post).where({ title: 'Some post...' }).include(['comments']).end(function (_err, _post) {
         err = _err;
         post = _post;
         done();
