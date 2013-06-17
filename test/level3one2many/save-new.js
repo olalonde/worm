@@ -17,7 +17,7 @@ var post = {
   ]
 }, $post = $.wrap(Post, post);
 
-describe.skip('save one-to-many relationship', function () {
+describe('save one-to-many relationship', function () {
   var err, $post;
 
   before(function (done) {
@@ -70,17 +70,18 @@ describe.skip('save one-to-many relationship', function () {
     });
   });
   
-  describe('after a fresh database load', function () {
+  describe.skip('after a fresh database load', function () {
     var post, err;
 
     before(function (done) {
-      $.cache.clear();
+      $.cache.clear(done);
     });
 
     before(function (done) {
       $.get(Post).where({ title: 'Some post...' }).end(function (_err, _post) {
         err = _err;
         post = _post;
+        done();
       });
     });
     

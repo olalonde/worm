@@ -47,11 +47,11 @@ var Post = $.model({
 
 var Comment = $.model({
   name: 'Comment',
-  attributes: [ 'id', 'text' ],
+  attributes: [ 'id', 'text', 'post_id' ],
   relationships: {
-    person: {
-      // @TODO hasOne vs belongsTo
-      type: 'belongsTo',
+    post: {
+      // @TODO belongsTo and see in what way it is different from hasOne
+      type: 'hasOne',
       model: 'Post'
     }
   },
