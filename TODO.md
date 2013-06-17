@@ -6,3 +6,5 @@ test for that as it does not appear to be the case at the moment.
 - test errors. make sure nothing fails silently
 - attache query object to instances ($inst.loadedWith ?) to remember how they were loaded.
   that could be helpful when we implement reload
+
+- write localStorage/IndexedDB and REST adapters
