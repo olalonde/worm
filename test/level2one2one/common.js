@@ -15,7 +15,7 @@ if (adapter_name === 'sql') {
   }
 }
 
-adapter = $.adapter($.adapters[adapter_name](opts), 'test');
+adapter = $.adapter($.adapters[adapter_name](opts), 'test2');
 
 var pretest = function (cb) {
   debug('Flushing database');
@@ -69,7 +69,7 @@ var Person = $.model({
       ////javascript representation to database representation
     //}
   //},
-  adapters: [ 'test' ]
+  adapters: [ 'test2' ]
 });
 
 var Passport = $.model({
@@ -81,7 +81,7 @@ var Passport = $.model({
       model: 'Person'
     }
   },
-  adapters: [ 'test' ]
+  adapters: [ 'test2' ]
 });
 
 var passportoli = {
