@@ -14,10 +14,13 @@ var post = {
     {
       text: 'second comment'
     }
-  ]
+  ],
+  author: {
+    name: 'Oli'
+  }
 }, $post = $.wrap(Post, post);
 
-describe('save one-to-many relationship', function () {
+describe('insert object with one-to-many relationship', function () {
   var err, $post;
 
   before(function (done) {
@@ -32,6 +35,7 @@ describe('save one-to-many relationship', function () {
   });
 
   it('should not return an error', function () {
+    if (err) console.error(err);
     should.not.exist(err);
   });
 

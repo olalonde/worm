@@ -35,11 +35,27 @@ var pretest = function (cb) {
 
 var Post = $.model({
   name: 'Post',
-  attributes: [ 'id', 'title' ],
+  attributes: [ 'id', 'title', 'author_id' ],
   relationships: {
     comments: {
       type: 'hasMany',
       model: 'Comment'
+    },
+    author: {
+      type: 'hasOne',
+      model: 'Author'
+    }
+  },
+  adapters: [ 'test3' ]
+});
+
+var Author = $.model({
+  name: 'Author',
+  attributes: [ 'id', 'name' ],
+  relationships: {
+    posts: {
+      type: 'hasMany',
+      model: 'Posts'
     }
   },
   adapters: [ 'test3' ]
@@ -61,5 +77,6 @@ var Comment = $.model({
 module.exports = {
   pretest: pretest,
   Post: Post,
+  Author: Author,
   Comment: Comment
 };
