@@ -13,6 +13,12 @@ var post = {
     },
     {
       text: 'second comment'
+    },
+    {
+      text: 'fun comment'
+    },
+    {
+      text: 'fun comment'
     }
   ],
   author: {
@@ -64,11 +70,11 @@ describe('eager loading one-to-many relationship', function () {
     should.exist(res.comments);
   });
 
-  it('post should have 2 comments', function () {
-    res.comments.length.should.equal(2);
+  it('post should have 4 comments', function () {
+    res.comments.length.should.equal(4);
   });
 
-  it('post should have 2 comments with the correct attributes', function () {
+  it('post should have 4 comments with the correct attributes', function () {
     post.comments.forEach(function (comment, index) {
       res.comments[index].text.should.equal(comment.text);
     });
@@ -112,11 +118,11 @@ describe('eager loading one-to-many relationship + one-to-one relationship', fun
     should.exist(res.comments);
   });
 
-  it('post should have 2 comments', function () {
-    res.comments.length.should.equal(2);
+  it('post should have 4 comments', function () {
+    res.comments.length.should.equal(4);
   });
 
-  it('post should have 2 comments with the correct attributes', function () {
+  it('post should have 4 comments with the correct attributes', function () {
     post.comments.forEach(function (comment, index) {
       res.comments[index].text.should.equal(comment.text);
     });
@@ -132,3 +138,46 @@ describe('eager loading one-to-many relationship + one-to-one relationship', fun
 
 });
 
+describe.skip('eager loading one-to-many relationship with where', function () {
+  var err, res;
+
+  before(function (done) {
+    $.cache.clear(done);
+  });
+
+  before(function (done) {
+    $.get(Post).where({ comments: { text: 'fun comment' } }).include(['comments']).end(function (_err, _res) {
+      err = _err;
+      res = _res;
+      done();
+    });
+  });
+
+  // @TODO: { 'comments.text': '.....' } syntax
+  it.skip('should be possible to use "comments.text": "fun comment" syntax', function () {});
+
+  it('should not return an error', function () {
+    if (err) console.error(err);
+    should.not.exist(err);
+  });
+
+  it('post should have correct title', function () {
+    should.exist(res.title);
+    res.title.should.equal('Some post...');
+  });
+
+  it('post should have comments property set', function () {
+    should.exist(res.comments);
+  });
+
+  it('post should have 2 comments', function () {
+    res.comments.length.should.equal(2);
+  });
+
+  it('post should have 2 comments with the correct attributes', function () {
+    post.comments.forEach(function (comment, index) {
+      res.comments[index].text.should.equal('fun comment');
+    });
+  });
+
+});

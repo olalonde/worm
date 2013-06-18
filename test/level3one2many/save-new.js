@@ -105,7 +105,7 @@ describe('insert object with one-to-many relationship', function () {
       post.comments[0].text.should.equal('first comment');
     });
 
-    it('post.comments[1].text should equal "first comment"', function () {
+    it('post.comments[1].text should equal "second comment"', function () {
       post.comments[1].text.should.equal('second comment');
     });
 
