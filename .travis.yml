@@ -8,3 +8,4 @@ before_script:
   - psql -c 'create database level1;' -U postgres
   - psql -c 'create database level2;' -U postgres
   - psql -c 'create database level3;' -U postgres
+  - psql -c 'create database level4;' -U postgres

@@ -55,7 +55,7 @@ var Author = $.model({
   relationships: {
     posts: {
       type: 'hasMany',
-      model: 'Posts'
+      model: 'Post'
     }
   },
   adapters: [ 'test3' ]
