@@ -27,7 +27,7 @@ var post = {
 }, $post = $.wrap(Post, post);
 
 describe('lazy loading one-to-many relationship', function () {
-  var err;
+  var err, res;
 
   before(function (done) {
     common.pretest(done);
@@ -48,9 +48,9 @@ describe('lazy loading one-to-many relationship', function () {
     // @TODO: return null instead of empty array for get if no results?
     $.get(Post).where({ title: 'Some post...' }).end(function (_err, _post) {
       if (_err) console.error(_err);
-      $.load($.wrap(_post), 'comments').end(function (_err, _post) {
+      res = _post;
+      $.load($.wrap(_post), 'comments').end(function (_err, _comments) {
         err = _err;
-        res = _post;
         done();
       });
     });

@@ -1,9 +1,10 @@
 -- postgresql
 -- @TODO: foreign constraints
-DROP TABLE IF EXISTS persons;
+DROP TABLE IF EXISTS people;
 DROP TABLE IF EXISTS passports;
 
-CREATE TABLE persons (
+-- person's plural is people
+CREATE TABLE people (
    id SERIAL,
    name character varying(255),
    passport_id integer,

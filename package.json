@@ -36,6 +36,7 @@
     "underscore": "~1.4.4",
     "async": "~0.2.9",
     "expressionist": "*",
-    "debug": "~0.7.2"
+    "debug": "~0.7.2",
+    "inflection": "~1.2.6"
   }
 }

@@ -6,6 +6,7 @@ var async = require('async'),
   Role = common.Role,
   Employee = common.Employee;
 
+
 // companies
 var vox = { name: 'Vox' },
   olico = { name: 'Oli Co.' };
@@ -26,55 +27,54 @@ var roles = [
 ];
 
 describe('save-new with many-to-many relationships', function () {
-  var err, vox, res;
+  var err;
 
   before(function (done) {
     common.pretest(done);
   });
 
   before(function (done) {
-    async.series([
-      $.save($.wrap(Company, companies)).cb(),
-      $.save($.wrap(Employee, employees)).cb(),
-      $.save($.wrap(Role, roles)).cb()
-    ], function (_err) {
-      err = _err;
+    $.save($.wrap(Company, companies)).end(function (_err) {
+      err = err || _err;
       done();
     });
   });
 
   before(function (done) {
-    $.cache.clear(done);
+    $.save($.wrap(Employee, employees)).end(function (_err) {
+      err = err || _err;
+      done();
+    });
   });
 
   before(function (done) {
-    $.get(Company).where({ name: 'Vox' }).end(function (_err, _vox) {
-      if (_err) console.error(_err);
-      vox = _vox;
-      $.load(vox, 'roles').end(function (_err, _roles) {
-      //@TODO $.load(vox, 'roles').include([ 'employee' ]).end(function (_err, _roles) {
-        res = _roles;
-        done();
-      });
+    $.save($.wrap(Role, roles)).end(function (_err) {
+      err = err || _err;
+      done();
     });
   });
+
+  //before(function (done) {
+    //$.cache.clear(done);
+  //});
+
+  //before(function (done) {
+    //// @TODO: return null instead of empty array for get if no results?
+    //$.get(Post).where({ title: 'Some post...' }).end(function (_err, _post) {
+      //if (_err) console.error(_err);
+      //$.load($.wrap(_post), 'comments').end(function (_err, _post) {
+        //err = _err;
+        //res = _post;
+        //done();
+      //});
+    //});
+  //});
 
   it('should not return an error', function () {
     if (err) console.error(err);
     should.not.exist(err);
   });
 
-  it('res should equal vox.roles', function () {
-    res.should.equal(vox.roles);
-  });
-
-  it('vox.roles should be an array', function () {
-    should.ok(Array.isArray(vox.roles));
-  });
-
-  it('vox.roles should have length 3', function () {
-    vox.roles.length.should.equal(3);
-  });
 
 });
 

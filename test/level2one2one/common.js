@@ -24,7 +24,7 @@ var pretest = function (cb) {
 
   function next() {
     if (adapter_name === 'sql') {
-      adapter.raw.query('TRUNCATE TABLE persons;TRUNCATE TABLE passports;', cb);
+      adapter.raw.query('TRUNCATE TABLE people;TRUNCATE TABLE passports;', cb);
     }
     else {
       adapter.flush(cb);
