@@ -75,7 +75,6 @@ describe('lazy loading one-to-many relationship', function () {
   });
 
   it('post should have 4 comments with the correct attributes', function () {
-    console.log(res.comments);
     // @TODO: for some reasons comments are returned in reverse order
     post.comments.forEach(function (comment, index) {
       res.comments[index].text.should.equal(comment.text);
