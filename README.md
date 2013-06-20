@@ -62,7 +62,7 @@ might translate the following [query](#query) to an HTTP GET call to
 `http://github.com/olalonde.json`: 
 
 ```javascript
-  $.get(User).id('olalonde'); // -> query object
+$.get(User).id('olalonde'); // -> query object
 ```
 
 Adapters can be registered globally with the `$.adapter` method:
@@ -92,7 +92,7 @@ Internally the SQL adapter uses the
 
 ### Building your own adapter
 
-See (lib/adapters/README.md)[lib/adapters/README.md].
+See [lib/adapters/README.md](lib/adapters/README.md).
 
 ## Model
 
