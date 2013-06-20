@@ -6,8 +6,8 @@
 # See [test/](test/) to get a glimpse
 
 - [Design Goals](#design-goals)
-- [$](#$)
-- [$obj](#$obj)
+- [$](#dollar)
+- [$obj](#obj)
 - [Adapter](#adapter)
 - [Model](#model)
 - [Instance](#instance)
@@ -43,7 +43,7 @@
 
   - Browser compatibility (TODO)
 
-## `$`
+## `$` <a name="dollar"></a>
 
 In the documentation, `$` refers to the main `worm` module as in 
 `var $ = require('worm');`
