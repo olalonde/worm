@@ -47,7 +47,7 @@ an instance. See Instance section.
 
 ## Adapter
 
-An adapter is a bridge between `worm` and actual databases. It can
+An adapter is a bridge between `worm` and an actual database. It can
 understand worm queries and translate those queries to a language that
 an underlying database can understand. For example, a Github `REST` adapter
 might translate the following query to an HTTP GET call to 
@@ -236,19 +236,19 @@ $.save($.wrap(User, { name: 'oli' })).end();
 first time you wrap an object, you need to specify the model of the
 object.
 
-## Queries
+## Query
 
-Queries are a database agnostic way to retrieve, save (create/update) and delete
-objects.
+A queries are a database agnostic way to retrieve, save (create/update) and delete
+objects from and to a database. Queries can be understood by adapters.
 
-The following worm methods create initialized queries that are passed to adapters
+The methods create queries that are passed to adapters
 when `.end()` is called.
 
 ```javascript
-$.get(Model, id)
-$.getAll(Model)
-$.save($obj)
-$.destroy($obj)
+$.get(Model, id).end();
+$.getAll(Model).end();
+$.save($obj).end();
+$.destroy($obj).end();
 ```
 
 For more information on query syntax, refer to the [tests](test/).

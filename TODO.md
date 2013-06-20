@@ -1,4 +1,4 @@
-- Sugar: make the ugly syntaxes go away!
+- Sugar: make the ugly syntax go away!
 - Verbose option to know what's going on
 - Implement sql adapter
 - Get rid of util and use _.js instead
