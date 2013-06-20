@@ -5,6 +5,14 @@
 # THIS IS A WORK IN PROGRESS
 # See [test/](test/) to get a glimpse
 
+- [Design Goals](#design-goals)
+- [$](#$)
+- [$obj](#$obj)
+- [Adapter](#adapter)
+- [Model](#model)
+- [Instance](#instance)
+- [Query](#query)
+
 ## Design Goals
 
   - Philosophy
@@ -43,19 +51,28 @@ In the documentation, `$` refers to the main `worm` module as in
 ## `$obj`
 
 In the documentation, `$obj` notation refers to a wrapped object, also known as
-an instance. See Instance section.
+an [instance](#instance).
 
 ## Adapter
 
 An adapter is a bridge between `worm` and an actual database. It can
 understand worm queries and translate those queries to a language that
 an underlying database can understand. For example, a Github `REST` adapter
-might translate the following query to an HTTP GET call to 
+might translate the following [query](#query) to an HTTP GET call to 
 `http://github.com/olalonde.json`: 
 
 ```javascript
-  $.get(User).id('olalonde'); // -> worm query
+  $.get(User).id('olalonde'); // -> query object
 ```
+
+Adapters can be registered globally with the `$.adapter` method:
+
+```javascript
+$.adapter('myadapter', myadapter);
+```
+
+This allows [models](#model) to reference adapters with their identifier
+instead of passing the actual adapter object.
 
 ### Officially supported adapters
 
@@ -80,8 +97,9 @@ See (lib/adapters/README.md)[lib/adapters/README.md].
 ## Model
 
 A model is a Javascript object containing meta data describing how
-an instance should behave. It may contain a list of attributes, how 
-it's unique ID is defined, relationships, validations and adapters.
+an [instance](#instance) should behave. It may contain a list of attributes, how 
+it's unique ID is defined, relationships, validations and
+[adapters](#adapter).
 
 It is the analoguous of Rails' `ActiveModel`, JugglingDB's `models` and
 Sequelize's `schemas`.
@@ -215,8 +233,8 @@ var User = $.model({
 
 ## Instance
 
-An instance is an internal representation of an object, which model
-defines it and how it should be persisted. It knows about a few things
+An instance is an internal representation of an object, which
+[model](#model) defines it and how it should be persisted. It knows about a few things
 like how an object retrieved from the databse, which of its properties 
 have changed since then, etc.
 
@@ -224,7 +242,7 @@ Instances can also represent collections of instances.
 
 As an end user, you don't need to know about instances. You will typically
 operate directly on plain Javascript objects and arrays. You will only need
-to "wrap" an object before passing it to a worm query.
+to "wrap" an object before passing it to a [query](#query).
 
 For example: 
 
@@ -233,13 +251,14 @@ $.save($.wrap(User, { name: 'oli' })).end();
 ```
 
 `$.wrap([Model, ]obj)` returns the instance of an object. If it is the
-first time you wrap an object, you need to specify the model of the
+first time you wrap an object, you need to specify the [model](#model) of the
 object.
 
 ## Query
 
 A queries are a database agnostic way to retrieve, save (create/update) and delete
-objects from and to a database. Queries can be understood by adapters.
+objects from and to a database. Queries can be understood by
+[adapters](#adapter).
 
 The methods create queries that are passed to adapters
 when `.end()` is called.
