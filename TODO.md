@@ -37,6 +37,7 @@ $.autocomplete(Model, attribute, 'some string to be autocompleted', function (re
 should probably not be part of core...
 
 - support polymorphies (i.e.: object_id = 123 object_type = 'order' or object_id = 123 and object_type = 'comment')
+- support http://jsonselect.org/#overview for includes and other stuff
 
 More TODOs:
 
